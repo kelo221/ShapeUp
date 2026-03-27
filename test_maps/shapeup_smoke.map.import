@@ -1,0 +1,14 @@
+[remap]
+
+importer="func_godot.map"
+type="Resource"
+uid="uid://b80mlh6bavuam"
+path="res://.godot/imported/shapeup_smoke.map-792da2343066d0f9e817c37773ddb826.tres"
+
+[deps]
+
+source_file="res://test_maps/shapeup_smoke.map"
+dest_files=["res://.godot/imported/shapeup_smoke.map-792da2343066d0f9e817c37773ddb826.tres"]
+
+[params]
+
