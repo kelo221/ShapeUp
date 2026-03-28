@@ -1,0 +1,90 @@
+name: Deploy Godot Web to GitHub Pages
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: 4.6.2-rc2
+  GODOT_VERSION_DIR: 4.6.2.rc2
+  EXPORT_PRESET: Web
+  BUILD_DIR: build/web
+
+jobs:
+  export-web:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Pages
+        uses: actions/configure-pages@v5
+
+      - name: Install Godot editor and export templates
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p "$RUNNER_TEMP/godot/editor" "$RUNNER_TEMP/godot/templates"
+
+          curl -fsSL "https://downloads.godotengine.org/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip" -o "$RUNNER_TEMP/godot/godot.zip"
+          curl -fsSL "https://downloads.godotengine.org/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz" -o "$RUNNER_TEMP/godot/templates.tpz"
+
+          unzip -q "$RUNNER_TEMP/godot/godot.zip" -d "$RUNNER_TEMP/godot/editor"
+          unzip -q "$RUNNER_TEMP/godot/templates.tpz" -d "$RUNNER_TEMP/godot/templates"
+
+          chmod +x "$RUNNER_TEMP/godot/editor/Godot_v${GODOT_VERSION}_linux.x86_64"
+
+          mkdir -p "$HOME/.local/share/godot/export_templates/${GODOT_VERSION_DIR}"
+          mv "$RUNNER_TEMP/godot/templates/templates/"* "$HOME/.local/share/godot/export_templates/${GODOT_VERSION_DIR}/"
+
+          echo "$RUNNER_TEMP/godot/editor" >> "$GITHUB_PATH"
+
+      - name: Import project assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .godot
+          Godot_v${GODOT_VERSION}_linux.x86_64 --headless --editor --quit
+
+      - name: Export web build
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${BUILD_DIR}"
+          Godot_v${GODOT_VERSION}_linux.x86_64 --headless --export-release "${EXPORT_PRESET}" "${BUILD_DIR}/index.html"
+          touch "${BUILD_DIR}/.nojekyll"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: export-web
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

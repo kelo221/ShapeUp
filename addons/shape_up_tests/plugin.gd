@@ -3,18 +3,35 @@ extends EditorPlugin
 
 
 func _enter_tree() -> void:
+	add_tool_menu_item("Run ShapeUp tests (GDScript)", _on_run_gd_tests)
 	add_tool_menu_item("Run ShapeUp tests (dotnet test)", _on_run_tests)
 
 
 func _exit_tree() -> void:
+	remove_tool_menu_item("Run ShapeUp tests (GDScript)")
 	remove_tool_menu_item("Run ShapeUp tests (dotnet test)")
+
+
+func _on_run_gd_tests() -> void:
+	var runner = load("res://addons/shape_up_tests/shapeup_gd_tests.gd").new()
+	var err: String = runner.run_all()
+	var dlg := AcceptDialog.new()
+	dlg.title = "ShapeUp GDScript tests"
+	dlg.dialog_text = ("All GDScript tests passed." if err == "" else ("FAILED:\n" + err))
+	dlg.ok_button_text = "OK"
+	EditorInterface.get_base_control().add_child(dlg)
+	dlg.popup_centered_ratio(0.35)
+	dlg.confirmed.connect(func(): dlg.queue_free())
+	dlg.close_requested.connect(func(): dlg.queue_free())
 
 
 func _on_run_tests() -> void:
 	var project_dir: String = ProjectSettings.globalize_path("res://").trim_suffix("/")
 	var sln: String = "%s/ShapeUp.sln" % project_dir
 	if not FileAccess.file_exists(sln):
-		push_error("ShapeUp: ShapeUp.sln not found next to project: %s" % sln)
+		push_error(
+			"ShapeUp: ShapeUp.sln not found (C# stack removed). Use Project → Run ShapeUp tests (GDScript)."
+		)
 		return
 
 	var output: Array = []

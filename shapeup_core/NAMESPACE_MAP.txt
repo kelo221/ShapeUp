@@ -1,0 +1,26 @@
+ShapeUp: C# namespace → GDScript path (GDScript-first port)
+============================================================
+
+ShapeUp.Core.ShapeEditor (model, generators, grid, TB math)
+  → res://shapeup_core/shape_editor/*.gd
+  → res://shapeup_core/decomposition/* (PolyBool, Delaunay, Bayazit, EditorPolygon, MathEx, …)
+
+ShapeUp.Core.TrenchBroomClipboard
+  → res://shapeup_core/trenchbroom_clipboard/*.gd (when present) + trenchbroom_grid.gd
+
+ShapeUp.Features.Editor2D
+  → res://features/editor_2d/*.gd
+
+Infrastructure (Godot glue)
+  → res://Infrastructure/*.gd
+
+Tests: former ShapeUp.Tests (NUnit) scenarios are covered by
+  → res://addons/shape_up_tests/shapeup_gd_tests.gd
+  → headless: Godot --headless --script res://addons/shape_up_tests/run_gd_tests_headless.gd
+
+Web export
+  → export_presets.cfg preset "Web" (Export/web/index.html).
+  → Godot 4 **Mono** builds cannot export to Web; use a standard (non-C#) Godot 4.x editor export for HTML5.
+
+Golden JSON (default project)
+  → res://tests/fixtures/project_default_gd.json (structural equality via ShapeupSerialization.deep_equal_variant)

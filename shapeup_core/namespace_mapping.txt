@@ -1,0 +1,11 @@
+ShapeUp.Core.ShapeEditor.*          -> res://shapeup_core/shape_editor/*.gd
+ShapeUp.Core.ShapeEditor.Decomposition -> res://shapeup_core/decomposition/
+ShapeUp.Core.ShapeEditor.Decomposition.PolyBoolCS -> res://shapeup_core/decomposition/poly_bool/
+ShapeUp.Core.ShapeEditor.Generators -> res://shapeup_core/shape_editor/generators/
+ShapeUp.Core.ShapeEditor.Shared     -> res://shapeup_core/shape_editor/shared/
+ShapeUp.Core.TrenchBroomClipboard   -> res://shapeup_core/trenchbroom/
+ShapeUp.Features.Editor2D           -> res://features/editor_2d/
+ShapeUp.Infrastructure.*          -> res://infrastructure/
+
+Golden JSON (C# System.Text.Json, IncludeFields): res://shapeup_core/fixtures/*.json
+Regenerate: dotnet run --project tools/JsonFixtureExporter -- path/to/shapeup_core/fixtures

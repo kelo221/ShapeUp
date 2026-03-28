@@ -1,0 +1,18 @@
+<Project Sdk="Godot.NET.Sdk/4.6.2-rc.2">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <RootNamespace>ShapeUp</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="ShapeUp.Core\ShapeUp.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="ShapeUp.Core\**\*.cs" />
+    <Compile Remove="ShapeUp.Tests\**\*.cs" />
+    <None Include="ShapeUp.Core\**\*.cs" />
+    <None Include="ShapeUp.Tests\**\*.cs" />
+  </ItemGroup>
+</Project>
