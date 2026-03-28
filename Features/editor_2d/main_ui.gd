@@ -4,9 +4,9 @@ const _ShapeExtrusionTarget := preload("res://shapeup_core/shape_editor/shape_ex
 const _ShapeProject := preload("res://shapeup_core/shape_editor/shape_project.gd")
 const _ShapeShape := preload("res://shapeup_core/shape_editor/shape_shape.gd")
 const _ShapeSegmentGenerator := preload("res://shapeup_core/shape_editor/shape_segment_generator.gd")
-const _ProjectUndoStack := preload("res://features/editor_2d/project_undo_stack.gd")
-const _ShapeEditor2DView := preload("res://features/editor_2d/shape_editor_2d_view.gd")
-const _PreviewCameraOrbit := preload("res://features/editor_2d/preview_camera_orbit.gd")
+const _ProjectUndoStack := preload("res://Features/editor_2d/project_undo_stack.gd")
+const _ShapeEditor2DView := preload("res://Features/editor_2d/shape_editor_2d_view.gd")
+const _PreviewCameraOrbit := preload("res://Features/editor_2d/preview_camera_orbit.gd")
 const _Enums := preload("res://shapeup_core/shape_editor/editor_enums.gd")
 const _MathEx := preload("res://shapeup_core/decomposition/su_math_ex.gd")
 
@@ -120,6 +120,7 @@ var _file_bg_image: FileDialog
 
 
 func _ready() -> void:
+	print("ShapeUP loaded!")
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_extrusion = _ShapeExtrusionTarget.new()
 	_undo = _ProjectUndoStack.new()

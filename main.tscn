@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dllh4mqy4704f"]
 
-[ext_resource type="Script" path="res://features/editor_2d/main_ui.gd" id="1_main"]
+[ext_resource type="Script" path="res://Features/editor_2d/main_ui.gd" id="1_main"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
