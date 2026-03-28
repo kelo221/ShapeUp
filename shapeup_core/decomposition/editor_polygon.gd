@@ -509,7 +509,7 @@ func extrude_along_spline(spline: _MathEx.Spline3, precision: int) -> Array:
 	var tnext := 1.0 / float(precision)
 	var avgforward := (spline.get_forward(there) + spline.get_forward(tnext)).normalized()
 
-	var look_basis := Basis.looking_at(avgforward, -spline.get_up(there), true)
+	var look_basis := Basis.looking_at(avgforward, spline.get_up(there), true)
 	last_poly.rotate_by_quaternion(look_basis.get_rotation_quaternion())
 	last_poly.translate(spline.get_point(there))
 
@@ -521,7 +521,7 @@ func extrude_along_spline(spline: _MathEx.Spline3, precision: int) -> Array:
 		tnext = float(p + 1) / float(precision)
 		avgforward = (spline.get_forward(there) + spline.get_forward(tnext)).normalized()
 
-		look_basis = Basis.looking_at(avgforward, -spline.get_up(there), true)
+		look_basis = Basis.looking_at(avgforward, spline.get_up(there), true)
 		poly.rotate_by_quaternion(look_basis.get_rotation_quaternion())
 		poly.translate(spline.get_point(there))
 
@@ -564,7 +564,7 @@ func extrude_brushes_along_spline(spline: _MathEx.Spline3, precision: int) -> Ar
 	var tnext := 1.0 / float(precision)
 	var avgforward := (spline.get_forward(there) + spline.get_forward(tnext)).normalized()
 
-	var look_basis := Basis.looking_at(avgforward, -spline.get_up(there), true)
+	var look_basis := Basis.looking_at(avgforward, spline.get_up(there), true)
 	last_poly.rotate_by_quaternion(look_basis.get_rotation_quaternion())
 	last_poly.translate(spline.get_point(there))
 
@@ -576,7 +576,7 @@ func extrude_brushes_along_spline(spline: _MathEx.Spline3, precision: int) -> Ar
 		tnext = float(p + 1) / float(precision)
 		avgforward = (spline.get_forward(there) + spline.get_forward(tnext)).normalized()
 
-		look_basis = Basis.looking_at(avgforward, -spline.get_up(there), true)
+		look_basis = Basis.looking_at(avgforward, spline.get_up(there), true)
 		poly.rotate_by_quaternion(look_basis.get_rotation_quaternion())
 		poly.translate(spline.get_point(there))
 

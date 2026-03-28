@@ -155,7 +155,7 @@ static func _extrude_polygon_along_spline_once(src: EditorPolygon, spline: _Math
 	else:
 		avg0 = avg0.normalized()
 	var up0 := spline.get_up(there0)
-	var basis0 := Basis.looking_at(avg0, (-up0).normalized() if up0.length_squared() > 1e-16 else Vector3.UP, true)
+	var basis0 := Basis.looking_at(avg0, up0 if up0.length_squared() > 1e-16 else Vector3.UP, true)
 	last_poly.rotate_by_quaternion(basis0.get_rotation_quaternion())
 	last_poly.translate(spline.get_point(there0))
 	results.append(last_poly.with_front_material())
@@ -171,7 +171,7 @@ static func _extrude_polygon_along_spline_once(src: EditorPolygon, spline: _Math
 		else:
 			avg = avg.normalized()
 		var up_at := spline.get_up(there)
-		var basis := Basis.looking_at(avg, (-up_at).normalized() if up_at.length_squared() > 1e-16 else Vector3.UP, true)
+		var basis := Basis.looking_at(avg, up_at if up_at.length_squared() > 1e-16 else Vector3.UP, true)
 		poly.rotate_by_quaternion(basis.get_rotation_quaternion())
 		poly.translate(spline.get_point(there))
 		for i in range(count - 1):

@@ -63,6 +63,7 @@ var _view
 var _preview_mesh: MeshInstance3D
 var _preview_cam: Camera3D
 var _preview_orbit: Node3D
+var _preview_viewport: SubViewport
 var _status_label: Label
 var _snap_spin: SpinBox
 var _snap_toggle: CheckButton
@@ -763,6 +764,17 @@ func _build_preview_panel() -> VBoxContainer:
 		refresh_preview()
 	, "Re-frame oblique")
 
+	preview_toolbar.add_child(VSeparator.new())
+	var wire_btn := Button.new()
+	wire_btn.text = "Wire"
+	wire_btn.toggle_mode = true
+	wire_btn.tooltip_text = "Toggle wireframe mode"
+	wire_btn.toggled.connect(func(on: bool):
+		if _preview_viewport:
+			_preview_viewport.debug_draw = Viewport.DEBUG_DRAW_WIREFRAME if on else Viewport.DEBUG_DRAW_DISABLED
+	)
+	preview_toolbar.add_child(wire_btn)
+
 	var sub := SubViewportContainer.new()
 	sub.stretch = true
 	sub.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -771,14 +783,14 @@ func _build_preview_panel() -> VBoxContainer:
 	sub.tooltip_text = "Right-drag: orbit • Mid-drag: pan • Wheel: zoom"
 	preview_col.add_child(sub)
 
-	var vp := SubViewport.new()
-	vp.handle_input_locally = true
-	vp.size = Vector2i(512, 512)
-	vp.render_target_update_mode = SubViewport.UPDATE_WHEN_VISIBLE
-	sub.add_child(vp)
+	_preview_viewport = SubViewport.new()
+	_preview_viewport.handle_input_locally = true
+	_preview_viewport.size = Vector2i(512, 512)
+	_preview_viewport.render_target_update_mode = SubViewport.UPDATE_WHEN_VISIBLE
+	sub.add_child(_preview_viewport)
 
 	_preview_orbit = _PreviewCameraOrbit.new()
-	vp.add_child(_preview_orbit)
+	_preview_viewport.add_child(_preview_orbit)
 
 	_preview_cam = Camera3D.new()
 	_preview_cam.fov = 55.0

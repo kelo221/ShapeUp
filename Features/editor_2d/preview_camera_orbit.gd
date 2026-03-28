@@ -71,24 +71,27 @@ func frame_bounding_box(aabb: AABB, fov_degrees: float, oblique_view: bool = fal
 	if oblique_view:
 		_yaw = 0.65
 		_pitch = 0.35
+		_apply_camera()
 	else:
-		_yaw = 0.0
-		_pitch = 0.0
-	_apply_camera()
+		set_preset_front()
 
 
 func set_preset_top() -> void:
 	_yaw = 0.0
-	_pitch = 0.0
+	_pitch = PI * 0.5 - 0.03
 	_distance = maxf(_distance, 0.5)
 	_apply_camera()
 
 
 func set_preset_front() -> void:
-	_yaw = 0.0
-	_pitch = PI * 0.5 - 0.03
+	if camera == null:
+		return
+	_yaw = PI
+	_pitch = 0.0
 	_distance = maxf(_distance, 0.5)
-	_apply_camera()
+	var pos := _target + Vector3(0.0, 0.0, -_distance)
+	camera.position = pos
+	camera.look_at(_target, Vector3.DOWN)
 
 
 func set_preset_right() -> void:
@@ -115,4 +118,9 @@ func _apply_camera() -> void:
 		_distance * cos(_yaw) * cp
 	)
 	camera.position = pos
-	camera.look_at(_target, Vector3.UP)
+	
+	# Use a stable up-vector to avoid singularity when looking straight up/down.
+	var up := Vector3.UP
+	if absf(absf(_pitch) - PI * 0.5) < 0.05:
+		up = Vector3.FORWARD
+	camera.look_at(_target, up)

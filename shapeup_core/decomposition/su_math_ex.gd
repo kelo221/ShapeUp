@@ -196,6 +196,7 @@ class Spline3:
 		var a := get_point(clampf(t - 0.001, 0.0, 1.0))
 		var b := get_point(clampf(t + 0.001, 0.0, 1.0))
 		var delta := (b - a).normalized()
+		# Match Unity's horizontal-perpendicular fallback.
 		var r := Vector3(-delta.z, 0.0, delta.x)
 		if r.length_squared() < 1e-16:
 			return Vector3.RIGHT
@@ -203,10 +204,12 @@ class Spline3:
 
 
 	func get_up(t: float) -> Vector3:
-		var d := get_point(clampf(t - 0.001, 0.0, 1.0))
+		var a := get_point(clampf(t - 0.001, 0.0, 1.0))
 		var b := get_point(clampf(t + 0.001, 0.0, 1.0))
-		var delta := (b - d).normalized()
-		var u := delta.cross(get_right(t))
+		var delta := (b - a).normalized()
+		# Godot RH: Right x Forward = Up. (Forward is -Z, Right is X).
+		# If Right is X and Forward is -Z, then X cross -Z = +Y.
+		var u := get_right(t).cross(delta)
 		if u.length_squared() < 1e-16:
 			return Vector3.UP
 		return u.normalized()
