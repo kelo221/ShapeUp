@@ -780,29 +780,21 @@ func _build_preview_panel() -> VBoxContainer:
 	_preview_orbit = _PreviewCameraOrbit.new()
 	vp.add_child(_preview_orbit)
 
-	var sun := DirectionalLight3D.new()
-	sun.rotation_degrees = Vector3(-48, -28, 0)
-	sun.position = Vector3(0, 2.2, 0)
-	sun.light_energy = 1.05
-	_preview_orbit.add_child(sun)
-
 	_preview_cam = Camera3D.new()
 	_preview_cam.fov = 55.0
 	_preview_cam.near = 0.01
 	_preview_cam.far = 256.0
 	var env := Environment.new()
-	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.2, 0.21, 0.24)
-	env.ambient_light_energy = 0.45
+	env.background_mode = Environment.BG_COLOR
+	env.background_color = Color(0.18, 0.18, 0.20)
 	_preview_cam.environment = env
 	_preview_orbit.add_child(_preview_cam)
 	_preview_orbit.camera = _preview_cam
 
 	_preview_mesh = MeshInstance3D.new()
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(0.76, 0.78, 0.8)
-	mat.roughness = 0.78
-	mat.metallic = 0.06
+	var matcap_shader := load("res://Features/editor_2d/matcap_cavity.gdshader") as Shader
+	var mat := ShaderMaterial.new()
+	mat.shader = matcap_shader
 	_preview_mesh.material_override = mat
 	_preview_orbit.add_child(_preview_mesh)
 
