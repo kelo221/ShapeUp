@@ -27,9 +27,6 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up Pages
-        uses: actions/configure-pages@v5
-
       - name: Install Godot editor and export templates
         shell: bash
         run: |
@@ -37,8 +34,8 @@ jobs:
 
           mkdir -p "$RUNNER_TEMP/godot/editor" "$RUNNER_TEMP/godot/templates"
 
-          curl -fsSL "https://downloads.godotengine.org/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip" -o "$RUNNER_TEMP/godot/godot.zip"
-          curl -fsSL "https://downloads.godotengine.org/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz" -o "$RUNNER_TEMP/godot/templates.tpz"
+          curl -fsSL "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip" -o "$RUNNER_TEMP/godot/godot.zip"
+          curl -fsSL "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz" -o "$RUNNER_TEMP/godot/templates.tpz"
 
           unzip -q "$RUNNER_TEMP/godot/godot.zip" -d "$RUNNER_TEMP/godot/editor"
           unzip -q "$RUNNER_TEMP/godot/templates.tpz" -d "$RUNNER_TEMP/godot/templates"
@@ -85,6 +82,11 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
