@@ -135,7 +135,7 @@ static func build_polygon_cap_array_mesh(convex: EditorPolygonMesh, double_sided
 			var bp: EditorPolygon = src.duplicate_polygon()
 			bp.reverse()
 			bp.apply_xy_based_uv0(Vector2(0.5, 0.5))
-			_append_polygon_fan(st, bp.with_back_material(), true)
+			_append_polygon_fan(st, bp.with_back_material(), false)
 	return _commit_mesh(st)
 
 
@@ -155,7 +155,7 @@ static func _extrude_polygon_along_spline_once(src: EditorPolygon, spline: _Math
 	else:
 		avg0 = avg0.normalized()
 	var up0 := spline.get_up(there0)
-	var basis0 := Basis.looking_at(avg0, (-up0).normalized() if up0.length_squared() > 1e-16 else Vector3.UP)
+	var basis0 := Basis.looking_at(avg0, (-up0).normalized() if up0.length_squared() > 1e-16 else Vector3.UP, true)
 	last_poly.rotate_by_quaternion(basis0.get_rotation_quaternion())
 	last_poly.translate(spline.get_point(there0))
 	results.append(last_poly.with_front_material())
@@ -171,7 +171,7 @@ static func _extrude_polygon_along_spline_once(src: EditorPolygon, spline: _Math
 		else:
 			avg = avg.normalized()
 		var up_at := spline.get_up(there)
-		var basis := Basis.looking_at(avg, (-up_at).normalized() if up_at.length_squared() > 1e-16 else Vector3.UP)
+		var basis := Basis.looking_at(avg, (-up_at).normalized() if up_at.length_squared() > 1e-16 else Vector3.UP, true)
 		poly.rotate_by_quaternion(basis.get_rotation_quaternion())
 		poly.translate(spline.get_point(there))
 		for i in range(count - 1):
@@ -247,12 +247,12 @@ static func build_linear_staircase_array_mesh(convex: EditorPolygonMesh, precisi
 				if j == prec - 1:
 					var back_w: EditorPolygon = next_poly.get_flipped()
 					back_w.apply_xy_based_uv0(Vector2(0.5, 0.5))
-					_append_polygon_fan(st, back_w.with_back_material(), true)
+					_append_polygon_fan(st, back_w.with_back_material(), false)
 			else:
 				_append_polygon_fan(st, poly.with_front_material(), false)
 				var back2: EditorPolygon = next_poly.get_flipped()
 				back2.apply_xy_based_uv0(Vector2(0.5, 0.5))
-				_append_polygon_fan(st, back2.with_back_material(), true)
+				_append_polygon_fan(st, back2.with_back_material(), false)
 			for k in range(pvc - 1):
 				if poly.vertices[k].hidden:
 					continue
@@ -304,7 +304,7 @@ static func build_scaled_extrude_array_mesh(
 		if end_scale.x != 0.0 and end_scale.y != 0.0:
 			var back: EditorPolygon = next_poly.get_flipped()
 			back.apply_xy_based_uv0(Vector2(0.5, 0.5))
-			_append_polygon_fan(st, back.with_back_material(), true)
+			_append_polygon_fan(st, back.with_back_material(), false)
 		for k in range(pvc - 1):
 			if poly.vertices[k].hidden:
 				continue
@@ -386,14 +386,14 @@ static func build_revolve_extruded_array_mesh(
 				if j == prec - 1:
 					var bk: EditorPolygon = next_poly.get_flipped()
 					bk.apply_xy_based_uv0(Vector2(0.5, 0.5))
-					_append_polygon_fan(st, bk.with_back_material(), true)
+					_append_polygon_fan(st, bk.with_back_material(), false)
 			elif is_equal_approx(deg_abs, 360.0) and h == 0.0:
 				pass
 			else:
 				_append_polygon_fan(st, poly.with_front_material(), false)
 				var bk2: EditorPolygon = next_poly.get_flipped()
 				bk2.apply_xy_based_uv0(Vector2(0.5, 0.5))
-				_append_polygon_fan(st, bk2.with_back_material(), true)
+				_append_polygon_fan(st, bk2.with_back_material(), false)
 			for k in range(pvc - 1):
 				if poly.vertices[k].hidden:
 					continue
